@@ -1,10 +1,12 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    // User not logged in, prevent access
-    header("Location: login.php");
+    // Not logged in. Block access.
+    http_response_code(403);
+    echo "You must be logged in to perform this action.";
     exit();
 }
+
 
 $page_title = "Delete pictures";
 
