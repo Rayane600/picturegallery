@@ -37,27 +37,19 @@ if (isset($_POST['pictures_name'])) {
                     $path = $upload_dir . DIRECTORY_SEPARATOR . $pictures_name;
                     $full_path = realpath($path);
                     // Security: Confirm path is within uploads dir (prevents any residual traversal)
-                // Normalize upload directory
-                $upload_dir_real = realpath($upload_dir);
-                
-                // Sanitize filename (defense-in-depth)
-                $filename = basename($pictures_name);
-                
-                // Build normalized full path
-                $full_path = realpath($upload_dir_real . DIRECTORY_SEPARATOR . $filename);
-                
-                // Validate and delete
-                if (
-                    $full_path !== false &&
-                    strpos($full_path, $upload_dir_real . DIRECTORY_SEPARATOR) === 0 &&
-                    is_file($full_path) &&
-                    is_writable($full_path) &&
-                    unlink($full_path)
-                ) {
-                    echo "Removed picture " . htmlspecialchars($pictures_name) . "<br>";
-                } else {
-                    echo "Record removed but file not found, not writable, or path invalid: " . htmlspecialchars($pictures_name) . "<br>";
-                }
+                    if ($full_path !== false && strpos($full_path, $upload_dir) === 0 && is_file($full_path) && is_writable($full_path) && unlink($full_path)) {
+
+
+                        echo "Removed picture " . htmlspecialchars($pictures_name) . "<br>";
+
+
+                    } else {
+
+
+                        echo "Record removed but file not found, not writable, or path invalid: " . htmlspecialchars($pictures_name) . "<br>";
+
+
+                    }
                 }
             } else {
                 echo "No matching picture found or permission denied.";
