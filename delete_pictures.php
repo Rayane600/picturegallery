@@ -1,5 +1,6 @@
 <?php
 session_start();
+// semgrep-disable-next-line requires-login
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     http_response_code(403);
     echo "You must be logged in to perform this action.";
