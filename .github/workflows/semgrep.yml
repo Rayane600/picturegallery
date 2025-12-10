@@ -10,8 +10,9 @@ on:
 jobs:
   semgrep_actions:          
     permissions:
-      security-events: write   # needed for uploading SARIF
-      contents: read           # usually needed for checkout
+      contents: read
+      security-events: write
+      actions: read
     name: Semgrep                
     runs-on: ubuntu-latest     
     container:
