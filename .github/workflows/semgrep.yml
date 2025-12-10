@@ -1,38 +1,29 @@
-# Step 1: Define workflow name.
-name: Semgrep  
-# Step 2: 
-  # You can choose any combination of triggers below,
-  # but make sure to include at least an option to run manually
+name: Semgrep
+
 on:
-  push:                   # Trigger on push events
-  workflow_dispatch:      # Trigger manually via GitHub UI
-  workflow_call:          # Triggered by other workflows
-  pull_request:           # Trigger on pull requests
+  push:                    # Trigger on push events
+  workflow_dispatch:       # Trigger manually via GitHub UI
+  workflow_call:           # Triggered by other workflows
+  pull_request:            # Trigger on pull requests
+
 # Step 3: Define jobs: a set of steps that run together on a VM
 jobs:
-  semgrep_actions:                # Job ID: descriptive name for your job
-    permissions: write-all        # Needed to upload a SARIF file, a standard format to report static scan results
-    name: Semgrep                 # Display name of the job
-    runs-on: ubuntu-latest       # Options: ubuntu-latest | windows-latest | macos-latest
-    # Hint: Use Linux type OS for lightweight and fast execution
-    # run job inside a container
-    container:
-      image: returntocorp/semgrep       # Options: returntocorp/semgrep | ubuntu:20.04 | alpine:latest
-      # Hint: Using Semgrep's official container ensures all dependencies are ready
-    # Step 4: Define the steps of our job
-    steps:
-      - name: main        # Options: choose any name you want. This step checks out our code.
-        uses: actions/checkout@v3        # Options: actions/checkout@v3 | actions/setup-node@v3 | docker/setup-buildx-action@v2
-        # Hint: Checkout is needed so that semgrep can access your repo code
+  semgrep_actions:          
+    permissions:
+      security-events: write-all  # Required for uploading SARIF files to GitHub's code scanning
+    name: Semgrep                
+    runs-on: ubuntu-latest     
+    container:
+      image: returntocorp/semgrep       
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3         
 
-      - name: scan        # Options: choose any name you want. This step scans our code. 
-        run: semgrep scan --sarif --sarif-output=semgrep.sarif --error         # Options: 
-                                     # semgrep scan --sarif --sarif-output=semgrep.sarif --error  (blocking)
-                                     # semgrep scan --sarif --sarif-output=semgrep.sarif || true  (non-blocking)
-        # Hint: Blocking mode stops workflow on issues; non-blocking continues
+      - name: Start scan
+        run: semgrep scan --sarif --sarif-output=semgrep.sarif --error
 
-      - name: Upload SARIF file to GitHub #The last step uploads our results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep.sarif
-        if: always()
+      - name: Upload SARIF file to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+        if: always()
