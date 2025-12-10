@@ -9,8 +9,7 @@ on:
 # Step 3: Define jobs: a set of steps that run together on a VM
 jobs:
   semgrep_actions:          
-    permissions:
-      security-events: write-all  # Required for uploading SARIF files to GitHub's code scanning
+    permissions: write-all  # Required for uploading SARIF files to GitHub's code scanning
     name: Semgrep                
     runs-on: ubuntu-latest     
     container:
