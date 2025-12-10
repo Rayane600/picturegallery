@@ -5,7 +5,8 @@ on:
   workflow_dispatch:       # Trigger manually via GitHub UI
   workflow_call:           # Triggered by other workflows
   pull_request:            # Trigger on pull requests
-
+permissions:
+  contents: read
 # Step 3: Define jobs: a set of steps that run together on a VM
 jobs:
   semgrep_actions:          
