@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    // User not logged in, prevent access
+    header("Location: login.php");
+    exit();
+}
 
 $page_title = "Delete pictures";
 
